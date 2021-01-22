@@ -6,7 +6,21 @@ const models = require("../models/models");
 const Vid = models.Vid;
 
 /* GET home page. */
+function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
+var Annie = makeid(10);
+const secretString = encodeURIComponent(Annie);
+
+console.log(makeid(5));
 router.get("/", function(req, res, next) {
   Vid.find(function(err, data) {
     console.log("this is try");
@@ -17,15 +31,32 @@ router.get("/", function(req, res, next) {
   });
 });
 
-router.get("/admin", function(req, res) {
-  res.render("admin", { title: "admin" });
+router.get("/login", function(req, res) {
+  res.render("login", { title: "login" });
 });
 
-router.post("/admin", function(req, res) {
+router.post("/login", function(req, res) {
+  var pw = req.body.password;
+  if (pw == "adminpassword") {
+    res.redirect("/admin/" + secretString);
+  } else {
+    res.send("Wrong Password");
+  }
+});
+
+router.get("/admin/:secretString", function(req, res) {
+  var te = req.params.secretString;
+  console.log(te);
+  console.log(Annie);
+  if (te == Annie) {
+    res.render("admin", { title: "admin" });
+  } else {
+    res.redirect("/login");
+  }
+});
+
+router.post("/admin/:secretString", function(req, res) {
   var u = new models.Vid({
-    // Note: Calling the email form field 'username' here is intentional,
-    //    passport is expecting a form field specifically named 'username'.
-    //    There is a way to change the name it expects, but this is fine.
     name: req.body.title,
     info: req.body.description
   });
@@ -36,43 +67,15 @@ router.post("/admin", function(req, res) {
       return;
     }
     console.log(vid);
-    res.send("success");
+    res.redirect("/");
   });
   /* console.log(req.body.title);
   console.log(req.body.description);
   res.send("Post page"); */
 });
 
-router.get("/multiplicity", function(req, res, next) {
-  res.render("carousel", { title: "multi" });
-});
-
-router.get("/musicandchill", function(req, res, next) {
-  res.render("mc", { title: "multi" });
-});
-
-router.get("/visualtool", function(req, res, next) {
-  res.render("tool", { title: "multi" });
-});
-
-router.get("/shell", function(req, res, next) {
-  res.render("shell", { title: "multi" });
-});
-
 router.get("/moviebase", function(req, res, next) {
   res.render("base", { title: "multi" });
-});
-
-router.get("/oops", function(req, res, next) {
-  res.render("oops", { title: "multi" });
-});
-
-router.get("/info", function(req, res, next) {
-  res.render("generic", { title: "Generic" });
-});
-
-router.get("/elements", function(req, res, next) {
-  res.render("elements", { title: "Elements" });
 });
 
 module.exports = router;

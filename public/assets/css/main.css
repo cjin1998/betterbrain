@@ -4277,12 +4277,12 @@ input, select, textarea {
 			-ms-transition: -ms-transform 0.5s ease, opacity 0.5s ease;
 			transition: transform 0.5s ease, opacity 0.5s ease;
 			position: relative;
-			width: calc(33.33% - 4.5em);
+			width: calc(50.00% - 10em);
 		
-			margin-left: 2.2em;
-			margin-right: 2.2em;
-			margin-top: 2.2em;
-			margin-bottom: 2.2em;
+			margin-left: 4em;
+			margin-right: 4em;
+			margin-top: 4em;
+			margin-bottom: 4em;
 			border-radius: 10px;
 		
 
@@ -4484,11 +4484,12 @@ input, select, textarea {
 			}
 
 				.tiles article {
-					width: calc(33.33333% - 4.75em);
+					width: calc(50% - 10em);
 		
-					margin-left: 2em;
-					margin-right: 2em;
-					margin-top: 2em;
+					margin-left: 4em;
+					margin-right: 4em;
+					margin-top: 4em;
+					margin-bottom: 4em;
 		
 
 				}
@@ -4798,4 +4799,8 @@ div {
 .infocontent{
 	color:black;
 	font-size:95%;
+}
+
+.podinfo{
+	color: black;
 }
