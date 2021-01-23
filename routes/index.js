@@ -58,6 +58,9 @@ router.get("/admin/:secretString", function(req, res) {
 router.post("/admin/:secretString", function(req, res) {
   var u = new models.Vid({
     name: req.body.title,
+    postedat: req.body.postedat,
+    datetosort: req.body.postedat,
+    link: req.body.link,
     info: req.body.description
   });
 

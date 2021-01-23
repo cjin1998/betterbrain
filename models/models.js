@@ -19,6 +19,21 @@ var vidSchema = new mongoose.Schema({
     required: true
   },
 
+  postedat: {
+    type: String,
+    required: true
+  },
+
+  datetosort: {
+    type: Date,
+    required: true
+  },
+
+  link: {
+    type: String,
+    required: true
+  },
+
   info: {
     type: String,
     required: true
