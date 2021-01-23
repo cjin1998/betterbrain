@@ -37,6 +37,11 @@ var vidSchema = new mongoose.Schema({
   info: {
     type: String,
     required: true
+  },
+
+  img: {
+    data: Buffer,
+    contentType: String
   }
 });
 

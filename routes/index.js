@@ -28,7 +28,8 @@ router.get("/", function(req, res, next) {
       vid: data,
       beebe: "testy est"
     });
-  });
+  }).sort({ _id: -1 });
+  /* .limit(2) */
 });
 
 router.get("/login", function(req, res) {
@@ -49,7 +50,10 @@ router.get("/admin/:secretString", function(req, res) {
   console.log(te);
   console.log(Annie);
   if (te == Annie) {
-    res.render("admin", { title: "admin" });
+    Vid.find(function(err, data) {
+      console.log("admin render vids");
+      res.render("admin", { title: "admin", vid: data });
+    });
   } else {
     res.redirect("/login");
   }
@@ -75,6 +79,19 @@ router.post("/admin/:secretString", function(req, res) {
   /* console.log(req.body.title);
   console.log(req.body.description);
   res.send("Post page"); */
+});
+
+router.get("/find", function(req, res) {
+  Vid.remove({ _id: "600b6b35164cb8ba593cb259" }, function(err, result) {
+    res.send(result);
+  });
+});
+
+router.get("/delete/:id", function(req, res) {
+  var aid = req.params.id;
+  Vid.remove({ _id: aid }, function(err, result) {
+    res.redirect("/login");
+  });
 });
 
 router.get("/moviebase", function(req, res, next) {
