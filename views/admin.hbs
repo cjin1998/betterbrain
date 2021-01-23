@@ -29,15 +29,15 @@
     <table>
         <tr>
             <th>Name</th>
-            <th>Uploaded At</th>
-            <th>Edit</th>
+            <th>Published Date</th>
+            <th>Status</th>
             <th>Delete</th>
         </tr>
         {{#each vid}}
         <tr>
             <td>{{name}}</td>
             <td>{{postedat}}</td>
-            <td><a href="/">Edit</a></td>
+            <td>{{status}} <a href="/delete/{{_id}}">Toggle</a></td>
             <td><a href="/delete/{{_id}}">Delete</a></td>
         </tr>
         {{/each}}
@@ -64,6 +64,14 @@
             <label style="color: black">Description</label>
             <textarea rows="10" cols="35" type="text" name="description" class="form-control"></textarea>
         </div>
+
+        <label for="status">Display Status</label>
+        <select name="status" id="status">
+            <option value="current">Current</option>
+            <option value="archive">Archive</option>
+
+        </select>
+
         <div class="form-group">
             <button class="btn btn-success">Add</button>
         </div>

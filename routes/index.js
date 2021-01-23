@@ -22,13 +22,13 @@ const secretString = encodeURIComponent(Annie);
 
 console.log(makeid(5));
 router.get("/", function(req, res, next) {
-  Vid.find(function(err, data) {
+  Vid.find({ status: "current" }, function(err, data) {
     console.log("this is try");
     res.render("index", {
       vid: data,
       beebe: "testy est"
     });
-  }).sort({ _id: -1 });
+  }).sort({ datetosort: -1 });
   /* .limit(2) */
 });
 
@@ -65,7 +65,8 @@ router.post("/admin/:secretString", function(req, res) {
     postedat: req.body.postedat,
     datetosort: req.body.postedat,
     link: req.body.link,
-    info: req.body.description
+    info: req.body.description,
+    status: req.body.status
   });
 
   u.save(function(err, vid) {
@@ -74,7 +75,7 @@ router.post("/admin/:secretString", function(req, res) {
       return;
     }
     console.log(vid);
-    res.redirect("/");
+    res.redirect("/admin/:secretString");
   });
   /* console.log(req.body.title);
   console.log(req.body.description);
@@ -94,8 +95,21 @@ router.get("/delete/:id", function(req, res) {
   });
 });
 
-router.get("/moviebase", function(req, res, next) {
-  res.render("base", { title: "multi" });
+router.get("/delete/:id", function(req, res) {
+  var aid = req.params.id;
+  Vid.remove({ _id: aid }, function(err, result) {
+    res.redirect("/login");
+  });
+});
+
+router.get("/archive", function(req, res, next) {
+  Vid.find({ status: "archive" }, function(err, data) {
+    console.log("this is try");
+    res.render("archive", {
+      vid: data,
+      beebe: "testy est"
+    });
+  }).sort({ datetosort: -1 });
 });
 
 module.exports = router;

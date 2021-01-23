@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Better Brain</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<script src="assets/js/freezeframe.min.js"></script>
+	<script src="handlebars-v2.0.0.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<noscript>
+		<link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+
+<body class="is-preload"
+	style="background-image: url('images/brain.jpg');background-attachment: fixed; background-size: cover;">
+
+
+	<!-- Sidebar -->
+
+	<!-- Wrapper -->
+	<div id="wrapper">
+
+		<!-- Intro -->
+
+		<!-- One -->
+
+		<!-- Two -->
+
+		<!-- Three -->
+		<section id="three" class="wrapper style1 fullscreen fade-up">
+
+			<div class="inner">
+
+				<h2 style="text-align: left; margin-bottom: 50px"><span style="display:inline-block;"
+						class="prompt">Archived Episodes</span></h2>
+				<a href="/">
+					<p style="font-size: 1.3em">Back to Home</p>
+				</a>
+				<section class="tiles">
+					{{#each vid}}
+					<article class="style1">
+						<span class="image">
+							<img src="images/white.jpg" alt="" />
+						</span>
+						<a href="{{link}}">
+							<h2>{{name}}</h2>
+							<div class="content">
+								<p>{{info}}</p>
+								<p>{{postedat}}</p>
+							</div>
+						</a>
+					</article>
+					{{/each}}
+
+				</section>
+
+			</div>
+		</section>
+
+
+
+
+	</div>
+
+	<!-- Footer -->
+
+
+
+	<!-- Scripts "https://www.youtube.com/watch?v=hYKmDl9W9K0&t=55s" -->
+	<script>
+		/*$("#live").click(function(){
+			alert("");
+		});**/
+
+		$("#source").click(function () {
+			alert("Source code is unavailable due to privacy reasons.");
+		});
+
+		$("#tool").click(function () {
+			alert("Live website is unavailable because this project is still in production.");
+		});
+	</script>
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/jquery.scrollex.min.js"></script>
+	<script src="assets/js/jquery.scrolly.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/util.js"></script>
+	<script src="assets/js/main.js"></script>
+	<script src="assets/js/chain.js"></script>
+</body>
+
+</html>
