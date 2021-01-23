@@ -95,10 +95,22 @@ router.get("/delete/:id", function(req, res) {
   });
 });
 
-router.get("/delete/:id", function(req, res) {
+router.get("/toggle/:id", function(req, res) {
   var aid = req.params.id;
-  Vid.remove({ _id: aid }, function(err, result) {
-    res.redirect("/login");
+  Vid.findOne({ _id: aid }, "status", function(err, result) {
+    if (result["status"] == "current") {
+      Vid.updateOne({ _id: aid }, { status: "archive" }, function(err, result) {
+        if (err) throw err;
+
+        res.redirect("/login");
+      });
+    } else {
+      Vid.updateOne({ _id: aid }, { status: "current" }, function(err, result) {
+        if (err) throw err;
+
+        res.redirect("/login");
+      });
+    }
   });
 });
 
