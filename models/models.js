@@ -50,8 +50,39 @@ var vidSchema = new mongoose.Schema({
   }
 });
 
+var adminSchema = new mongoose.Schema({
+  user: {
+    type: String,
+    required: true
+  },
+
+  password: {
+    type: String,
+    required: true
+  },
+
+  about: {
+    type: String,
+    required: true
+  },
+
+  twitLink: {
+    type: String
+  },
+
+  instLink: {
+    type: String
+  },
+
+  loggedIn: {
+    type: Boolean
+  }
+});
+
 var Vid = mongoose.model("vid", vidSchema);
+var Admin = mongoose.model("admin", adminSchema);
 
 module.exports = {
-  Vid: Vid
+  Vid: Vid,
+  Admin: Admin
 };

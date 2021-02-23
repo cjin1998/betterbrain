@@ -4,32 +4,17 @@ var router = express.Router();
 const models = require("../models/models");
 
 const Vid = models.Vid;
+const Admin = models.Admin;
 
-/* GET home page. */
-function makeid(length) {
-  var result = "";
-  var characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
-var Annie = makeid(10);
-const secretString = encodeURIComponent(Annie);
-
-console.log(makeid(5));
 router.get("/", function(req, res, next) {
   Vid.find({ status: "current" }, function(err, data) {
-    console.log("this is try");
-    res.render("index", {
-      vid: data,
-      beebe: "testy est"
+    Admin.find({ user: "admin" }, function(err, admin) {
+      res.render("index", {
+        vid: data,
+        adminData: admin[0]
+      });
     });
   }).sort({ datetosort: -1 });
-  /* .limit(2) */
 });
 
 router.get("/login", function(req, res) {
@@ -38,48 +23,82 @@ router.get("/login", function(req, res) {
 
 router.post("/login", function(req, res) {
   var pw = req.body.password;
-  if (pw == "adminpassword") {
-    res.redirect("/admin/" + secretString);
-  } else {
-    res.send("Wrong Password");
-  }
-});
+  Admin.findOne({ user: "admin" }, "password", function(err, result) {
+    if (result["password"] == pw) {
+      Admin.updateOne({ user: "admin" }, { loggedIn: true }, function(
+        err,
+        result
+      ) {
+        if (err) throw err;
 
-router.get("/admin/:secretString", function(req, res) {
-  var te = req.params.secretString;
-  console.log(te);
-  console.log(Annie);
-  if (te == Annie) {
-    Vid.find(function(err, data) {
-      console.log("admin render vids");
-      res.render("admin", { title: "admin", vid: data });
-    });
-  } else {
-    res.redirect("/login");
-  }
-});
+        res.redirect("/admin");
+      });
+    } else {
+      Admin.updateOne({ user: "admin" }, { loggedIn: false }, function(
+        err,
+        result
+      ) {
+        if (err) throw err;
 
-router.post("/admin/:secretString", function(req, res) {
-  var u = new models.Vid({
-    name: req.body.title,
-    postedat: req.body.postedat,
-    datetosort: req.body.postedat,
-    link: req.body.link,
-    info: req.body.description,
-    status: req.body.status
-  });
-
-  u.save(function(err, vid) {
-    if (err) {
-      console.log(err);
-      return;
+        res.redirect("/login");
+      });
     }
-    console.log(vid);
-    res.redirect("/admin/:secretString");
   });
-  /* console.log(req.body.title);
-  console.log(req.body.description);
-  res.send("Post page"); */
+});
+
+router.get("/admin", function(req, res) {
+  Vid.find(function(err, data) {
+    Admin.find(function(err, admin) {
+      if (admin[0]["loggedIn"] == true) {
+        res.render("admin", { title: "admin", vid: data, adminData: admin[0] });
+      } else {
+        res.redirect("/login");
+      }
+    });
+  });
+});
+
+router.post("/admin", function(req, res) {
+  var clicked = req.body.clicked;
+  if (clicked == "Add") {
+    var u = new models.Vid({
+      name: req.body.title,
+      postedat: req.body.postedat,
+      datetosort: req.body.postedat,
+      link: req.body.link,
+      info: req.body.description,
+      status: req.body.status
+    });
+
+    u.save(function(err, vid) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      console.log(vid);
+      res.redirect("/admin");
+    });
+  } else if (clicked == "Update") {
+    var pw = req.body.password;
+    var repeat = req.body.repeat;
+    var about = req.body.about;
+    var instLink = req.body.ilink;
+    var twitLink = req.body.tlink;
+
+    if (pw == repeat) {
+      Admin.updateOne(
+        { user: "admin" },
+        { password: pw, about: about, twitLink: twitLink, instLink: instLink },
+        function(err, result) {
+          if (err) throw err;
+
+          res.redirect("/admin");
+        }
+      );
+    } else {
+      alert("passwords does not match!");
+    }
+  }
 });
 
 router.get("/find", function(req, res) {
@@ -91,7 +110,7 @@ router.get("/find", function(req, res) {
 router.get("/delete/:id", function(req, res) {
   var aid = req.params.id;
   Vid.remove({ _id: aid }, function(err, result) {
-    res.redirect("/login");
+    res.redirect("/admin");
   });
 });
 
@@ -102,13 +121,13 @@ router.get("/toggle/:id", function(req, res) {
       Vid.updateOne({ _id: aid }, { status: "archive" }, function(err, result) {
         if (err) throw err;
 
-        res.redirect("/login");
+        res.redirect("/admin");
       });
     } else {
       Vid.updateOne({ _id: aid }, { status: "current" }, function(err, result) {
         if (err) throw err;
 
-        res.redirect("/login");
+        res.redirect("/admin");
       });
     }
   });
@@ -116,12 +135,22 @@ router.get("/toggle/:id", function(req, res) {
 
 router.get("/archive", function(req, res, next) {
   Vid.find({ status: "archive" }, function(err, data) {
-    console.log("this is try");
     res.render("archive", {
       vid: data,
       beebe: "testy est"
     });
   }).sort({ datetosort: -1 });
+});
+
+router.get("/logout", function(req, res, next) {
+  Admin.updateOne({ user: "admin" }, { loggedIn: false }, function(
+    err,
+    result
+  ) {
+    if (err) throw err;
+
+    res.redirect("/");
+  });
 });
 
 module.exports = router;
